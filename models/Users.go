@@ -12,4 +12,5 @@ type Users struct {
 	IsVerif       bool
 	Profile_photo string
 	Role          string
+	Token 	string
 }
