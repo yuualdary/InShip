@@ -13,8 +13,9 @@ import (
 
 type Service interface {
 	RegisterUser(input RegisterInput) (models.Users, error)
-	// UserAvatar(ID int, filelocatiion string) (models.Users,error)
+	SaveAvatar(ID int, filelocatiion string) (models.Users,error)
 	LoginUser(input LoginInput)(models.Users, error)
+	GetUserById(ID int) (models.Users, error)
 }
 
 type service struct {
@@ -59,7 +60,7 @@ func (s *service) RegisterUser(input RegisterInput) (models.Users, error){
 		return CheckMail, errors.New("Email Already Used")
 	}
 
-	NewUser, err := s.repository.RegisterUser(User)
+	NewUser, err := s.repository.SaveUser(User)
 
 	if err != nil {
 
@@ -99,4 +100,41 @@ func(s *service)LoginUser(input LoginInput)(models.Users, error){
 	}
 
 	return GetDataUser,nil
+}
+func(s *service)SaveAvatar(ID int, filelocatiion string) (models.Users,error){
+
+	
+	//check id
+
+	CheckUserID, err := s.repository.FindUserById(ID)
+
+	if err != nil{
+
+		return CheckUserID,err
+	}
+
+	CheckUserID.Profile_photo = filelocatiion
+
+	Update,err := s.repository.SaveUser(CheckUserID)
+
+	if err !=nil{
+		return Update,err
+	}
+
+	return Update, nil
+	
+
+}
+func (s *service)GetUserById(ID int) (models.Users, error){
+
+	user, err := s.repository.FindUserById(ID)
+
+	if err != nil{
+		return user, err
+	}
+
+	if user.ID == 0{
+		return user, errors.New("No user found")
+	}
+	return user, nil
 }

@@ -4,6 +4,7 @@ import (
 	"InShip/Users"
 	"InShip/auth"
 	"InShip/helper"
+	"InShip/models"
 	"fmt"
 	"net/http"
 
@@ -75,7 +76,54 @@ func(h *UserHandler)RegisterUser(c *gin.Context){
 
 func (h *UserHandler)SaveAvatar(c *gin.Context){
 
+	file, err := c.FormFile("file")
+
+	if err != nil {
+		data := gin.H{"is_uploaded" : false}
+
+		response := helper.APIResponse("Failed to upload an image", http.StatusBadRequest,"error", data)
+
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	CurrentUser := c.MustGet("CurrentUser").(models.Users)
+	UserID := CurrentUser.ID
+
+	path:= fmt.Sprintf("images/%d-%s",UserID,file.Filename)
+	err = c.SaveUploadedFile(file,path)
+
+
+	if err!=nil{
+
+		data := gin.H{"is_uploaded" : false}
+
+		response := helper.APIResponse("Failed to upload an image", http.StatusBadRequest,"error", data)
+		fmt.Println(response)
+
+		c.JSON(http.StatusBadRequest,response)
+		return
+	}	
+
+	_,err = h.UserService.SaveAvatar(UserID,path)
+
+	if err!=nil{
+
+		data := gin.H{"is_uploaded" : false}
+
+		response := helper.APIResponse("Failed to upload an image", http.StatusBadRequest,"error", data)
+		fmt.Println(response)
+
+		c.JSON(http.StatusBadRequest,response)
+		return
+	}
+
+	data := gin.H{"is_uploaded" : true}
+	response := helper.APIResponse("Avatar Successfully Uploaded", http.StatusOK,"success",data)
+	c.JSON(http.StatusOK,response)
 }
+
+
 
 func (h *UserHandler)LoginUser(c *gin.Context){
 

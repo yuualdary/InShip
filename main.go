@@ -5,6 +5,7 @@ import (
 	"InShip/auth"
 	"InShip/config"
 	"InShip/handler"
+	"InShip/middleware"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -32,6 +33,7 @@ func main(){
 	{
 		v1.POST("/users/register",UsersHandler.RegisterUser)
 		v1.POST("/users/login",UsersHandler.LoginUser)
+		v1.POST("/users/uploadavatar",middleware.AuthMiddleware(AuthService,UsersService),UsersHandler.SaveAvatar)
 	}
 
 	// GetCurrentDate := time.Now().Local()
