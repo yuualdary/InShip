@@ -2,6 +2,7 @@ package main
 
 import (
 	"InShip/Users"
+	"InShip/auth"
 	"InShip/config"
 	"InShip/handler"
 
@@ -19,10 +20,10 @@ func main(){
 
 	UserRepository:= Users.NewRepository(config.DB)
 	UsersService := Users.NewService(UserRepository)
-	
+	AuthService := auth.NewService()
 
 
-	UsersHandler := handler.NewUserHandler(UsersService)
+	UsersHandler := handler.NewUserHandler(UsersService,AuthService)
 
 
 	router.Static("/images","./images")
@@ -30,7 +31,7 @@ func main(){
 	v1:= router.Group("/api/v1")
 	{
 		v1.POST("/users/register",UsersHandler.RegisterUser)
-
+		v1.POST("/users/login",UsersHandler.LoginUser)
 	}
 
 	// GetCurrentDate := time.Now().Local()
