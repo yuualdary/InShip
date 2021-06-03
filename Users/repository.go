@@ -8,9 +8,9 @@ import (
 
 
 type Repository interface {
-	RegisterUser(user models.Users) (models.Users, error)
+	SaveUser(user models.Users) (models.Users, error)
 	FindUserEmail(email string) (models.Users, error)
-
+	FindUserById(ID int)(models.Users,error)
 }
 
 type repository struct {
@@ -22,7 +22,7 @@ func NewRepository(db *gorm.DB) *repository{
 	return &repository{db}
 }
 
-func(r *repository) RegisterUser(user models.Users) (models.Users, error){
+func(r *repository) SaveUser(user models.Users) (models.Users, error){
 
 	err:=r.db.Save(&user).Error
 
@@ -46,5 +46,18 @@ func(r *repository)FindUserEmail(email string) (models.Users, error){
 	}
 
 	return User,nil
+
+}
+func(r *repository)FindUserById(ID int)(models.Users,error){
+
+	var User models.Users
+
+	err:= r.db.Where("id = ?", ID).Find(&User).Error
+
+	if err !=nil{
+		return User,err
+	}
+
+	return User,err
 
 }
