@@ -1,14 +1,15 @@
 package models
 
+import "gorm.io/gorm"
+
 type Companies struct {
-	ID             int `gorm:"primary_key"`
+	gorm.Model
 	CompanyName    string
 	CompanyAddress string
 	CompanyProfile string
 	CompanyPhoto   string
 	IsCompany      bool
-	UsersID        string
-	User           Users `gorm:"foreignKey:UsersID"`
+
 
 	SocialMedias []SocialMedias
 }

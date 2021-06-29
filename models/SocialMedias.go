@@ -1,7 +1,7 @@
 package models
 
 type SocialMedias struct {
-	ID          int `gorm:"primary_key"`
+	ID          uint `gorm:"primary_key"`
 	SocType     string
 	SocLink     string
 	UsersID     string

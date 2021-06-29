@@ -1,9 +1,14 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
+
 
 type Users struct {
-	ID            int `gorm:"primary_key"`
+gorm.Model
 	Name          string
 	Email         string
 	Bod           time.Time
@@ -13,4 +18,6 @@ type Users struct {
 	Profile_photo string
 	Role          string
 	Token 	string
+	CompanyID       int
+	Companies           Companies `gorm:"foreignKey:CompanyID"`
 }
