@@ -1,11 +1,15 @@
 package models
 
-import "time"
+import (
+	"time"
+	"gorm.io/gorm"
+)
+
 
 type Otps struct {
-	ID             int `gorm:"primary_key"`
-	Value   string
-	UsersID string 
+	gorm.Model
+	Value   int
+	UsersID int 
 	User Users `gorm:"foreignKey:UsersID"`
 	Expired time.Time
 }
